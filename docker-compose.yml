@@ -1,0 +1,81 @@
+services:
+  # Frontend - Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: couple-diary-frontend:latest
+    container_name: couple-diary-frontend
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=/api
+    networks:
+      - couple-diary-network
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  # Backend - Spring Boot
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: couple-diary-backend:latest
+    container_name: couple-diary-backend
+    ports:
+      - "127.0.0.1:8087:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - STORAGE_ENDPOINT=${STORAGE_ENDPOINT}
+      - STORAGE_ACCESS_KEY=${STORAGE_ACCESS_KEY}
+      - STORAGE_SECRET_KEY=${STORAGE_SECRET_KEY}
+      - STORAGE_BUCKET=couple-diary-media
+      - STORAGE_REGION=${STORAGE_REGION:ap-northeast-2}
+      - DOMAIN=${DOMAIN}
+    networks:
+      - couple-diary-network
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+  # PostgreSQL Database (for testing)
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: couple-diary-postgres-test
+    environment:
+      POSTGRES_DB: ${POSTGRES_TEST_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD}
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    networks:
+      - couple-diary-network
+    restart: unless-stopped
+
+  # PostgreSQL Database (for production)
+  postgres:
+    image: postgres:16-alpine
+    container_name: couple-diary-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - couple-diary-network
+    restart: unless-stopped
+
+volumes:
+  postgres_test_data:
+  postgres_data:
+
+networks:
+  couple-diary-network:
+    driver: bridge
