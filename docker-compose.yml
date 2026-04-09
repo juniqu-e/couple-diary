@@ -34,7 +34,7 @@ services:
       - STORAGE_ACCESS_KEY=${STORAGE_ACCESS_KEY}
       - STORAGE_SECRET_KEY=${STORAGE_SECRET_KEY}
       - STORAGE_BUCKET=couple-diary-media
-      - STORAGE_REGION=${STORAGE_REGION:ap-northeast-2}
+      - STORAGE_REGION=${STORAGE_REGION:-ap-northeast-2}
       - DOMAIN=${DOMAIN}
     networks:
       - couple-diary-network
