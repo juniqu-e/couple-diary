@@ -56,13 +56,33 @@ docker compose up -d
 
 ### Storage Configuration
 
-Couple Diary supports any S3-compatible storage:
+Couple Diary uses the AWS S3 SDK, which supports any S3-compatible storage.  
+The SDK automatically resolves the endpoint from the `region` when using AWS S3, so `STORAGE_ENDPOINT` can be left empty.  
+For self-hosted or third-party storage, set the endpoint explicitly.
 
-| Provider | `STORAGE_ENDPOINT` |
-|----------|-------------------|
-| AWS S3 | *(leave empty)* |
-| MinIO | `http://minio:9000` |
-| Cloudflare R2 | `https://<account-id>.r2.cloudflarestorage.com` |
+| Provider | `STORAGE_ENDPOINT` | Note |
+|----------|-------------------|------|
+| AWS S3 | *(leave empty)* | SDK auto-resolves from `STORAGE_REGION` |
+| MinIO | `http://minio:9000` | Self-hosted, included in local dev compose |
+| Cloudflare R2 | `https://<account-id>.r2.cloudflarestorage.com` | S3-compatible |
+
+Example `.env` for MinIO:
+```env
+STORAGE_ENDPOINT=http://minio:9000
+STORAGE_ACCESS_KEY=minioadmin
+STORAGE_SECRET_KEY=minioadmin
+STORAGE_BUCKET=couple-diary-media
+STORAGE_REGION=us-east-1
+```
+
+Example `.env` for AWS S3:
+```env
+STORAGE_ENDPOINT=
+STORAGE_ACCESS_KEY=AKIA...
+STORAGE_SECRET_KEY=...
+STORAGE_BUCKET=couple-diary-media
+STORAGE_REGION=ap-northeast-2
+```
 
 ## Project Structure
 
