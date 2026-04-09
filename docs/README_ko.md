@@ -56,13 +56,33 @@ docker compose up -d
 
 ### 스토리지 설정
 
-S3 호환 스토리지를 모두 지원합니다:
+AWS S3 SDK를 사용하여 S3 호환 스토리지를 모두 지원합니다.  
+AWS S3 사용 시 SDK가 `region` 값으로 엔드포인트를 자동 결정하므로 `STORAGE_ENDPOINT`를 비워두면 됩니다.  
+자체 호스팅 또는 서드파티 스토리지 사용 시 엔드포인트를 명시적으로 설정합니다.
 
-| 제공자 | `STORAGE_ENDPOINT` |
-|--------|-------------------|
-| AWS S3 | *(비워두기)* |
-| MinIO | `http://minio:9000` |
-| Cloudflare R2 | `https://<account-id>.r2.cloudflarestorage.com` |
+| 제공자 | `STORAGE_ENDPOINT` | 비고 |
+|--------|-------------------|------|
+| AWS S3 | *(비워두기)* | SDK가 `STORAGE_REGION`으로 자동 결정 |
+| MinIO | `http://minio:9000` | 자체 호스팅, 로컬 개발 compose에 포함 |
+| Cloudflare R2 | `https://<account-id>.r2.cloudflarestorage.com` | S3 호환 |
+
+MinIO 사용 시 `.env` 예시:
+```env
+STORAGE_ENDPOINT=http://minio:9000
+STORAGE_ACCESS_KEY=minioadmin
+STORAGE_SECRET_KEY=minioadmin
+STORAGE_BUCKET=couple-diary-media
+STORAGE_REGION=us-east-1
+```
+
+AWS S3 사용 시 `.env` 예시:
+```env
+STORAGE_ENDPOINT=
+STORAGE_ACCESS_KEY=AKIA...
+STORAGE_SECRET_KEY=...
+STORAGE_BUCKET=couple-diary-media
+STORAGE_REGION=ap-northeast-2
+```
 
 ## 프로젝트 구조
 
