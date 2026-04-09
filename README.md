@@ -1,74 +1,92 @@
 # Couple Diary
 
-커플을 위한 일정 관리 & 추억 저장 오픈소스 웹 서비스
+[한국어](docs/README_ko.md)
 
-## 기능
+An open-source web service for couples to manage schedules, write diaries, and store memories together.
 
-- **일정 관리** - 캘린더 기반 커플 공통/개인 일정, 기념일 자동 생성
-- **다이어리** - 타임라인/캘린더 뷰, 사진 첨부, 마크다운 지원
-- **사진 갤러리** - MinIO 기반 사진 저장, EXIF 메타데이터 자동 추출
-- **추억 지도** - 한국 지도 기반 추억/여행 계획 핀 관리
-- **버킷리스트** - 카테고리별 버킷리스트 관리
+## Features
 
-## 기술 스택
+- **Schedule Management** - Calendar-based shared/personal schedules, auto-generated anniversaries
+- **Diary** - Timeline & calendar views, photo attachments, markdown support
+- **Photo Gallery** - S3-compatible storage, automatic EXIF metadata extraction
+- **Memory Map** - Pin-based memory & travel plan management on a map
+- **Bucket List** - Categorized bucket list with completion tracking
 
-| 영역 | 기술 |
-|------|------|
+## Tech Stack
+
+| Area | Technology |
+|------|-----------|
 | Backend | Spring Boot 3.5, Java 21, JPA |
 | Frontend | Next.js 15, TypeScript, Tailwind CSS |
 | Database | PostgreSQL 16 |
-| Storage | MinIO (S3 호환) |
+| Storage | AWS S3 / MinIO (S3-compatible) |
 | Infra | Docker Compose |
 
-## 시작하기
+## Getting Started
 
-### 사전 요구사항
+### Prerequisites
 
 - Docker & Docker Compose
 
-### 로컬 실행
+### Local Development
 
 ```bash
-git clone https://github.com/your-username/couple-diary.git
+git clone https://github.com/juniqu-e/couple-diary.git
 cd couple-diary
 
-# 로컬 환경 실행 (DB + MinIO + Backend + Frontend)
+# Start all services (DB + MinIO + Backend + Frontend)
 docker compose -f docker-compose.local.yml up -d
 ```
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8080
-- MinIO Console: http://localhost:9001
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8080 |
+| MinIO Console | http://localhost:9001 |
 
-### 운영 배포
+### Production Deployment
 
 ```bash
-# 환경변수 설정
+# Configure environment variables
 cp .env.example .env
-# .env 파일을 편집하여 실제 값 입력
+# Edit .env with your actual values
 
 docker compose up -d
 ```
 
-## 프로젝트 구조
+### Storage Configuration
+
+Couple Diary supports any S3-compatible storage:
+
+| Provider | `STORAGE_ENDPOINT` |
+|----------|-------------------|
+| AWS S3 | *(leave empty)* |
+| MinIO | `http://minio:9000` |
+| Cloudflare R2 | `https://<account-id>.r2.cloudflarestorage.com` |
+
+## Project Structure
 
 ```
 couple-diary/
-├── backend/          # Spring Boot 백엔드
-├── frontend/         # Next.js 프론트엔드
-├── docs/             # 프로젝트 문서
-├── docker-compose.yml        # 운영 배포용
-└── docker-compose.local.yml  # 로컬 개발용
+├── backend/                  # Spring Boot backend
+│   └── src/main/resources/
+│       ├── application.yml           # Common config
+│       ├── application-local.yml     # Local dev config
+│       └── application-prod.yml      # Production config
+├── frontend/                 # Next.js frontend
+├── docs/                     # Documentation
+├── docker-compose.yml        # Production deployment
+└── docker-compose.local.yml  # Local development
 ```
 
-## 기여하기
+## Contributing
 
-1. Fork
-2. Feature branch 생성 (`git checkout -b feature/amazing-feature`)
-3. 커밋 ([커밋 컨벤션](docs/Git_convention.md) 참고)
-4. Push (`git push origin feature/amazing-feature`)
-5. Pull Request 생성
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes ([Commit Convention](docs/Git_convention.md))
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 라이선스
+## License
 
-MIT License - [LICENSE](LICENSE) 참고
+MIT License - See [LICENSE](LICENSE) for details.

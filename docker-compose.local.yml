@@ -1,0 +1,76 @@
+services:
+  # Frontend - Next.js (로컬 개발용)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: couple-diary-frontend:local
+    container_name: couple-diary-local-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=/api
+    networks:
+      - couple-diary-local
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  # Backend - Spring Boot (로컬 개발용)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: couple-diary-backend:local
+    container_name: couple-diary-local-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    networks:
+      - couple-diary-local
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - minio
+
+  # MinIO (로컬 개발용)
+  minio:
+    image: minio/minio:latest
+    container_name: couple-diary-local-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_local_data:/data
+    networks:
+      - couple-diary-local
+    restart: unless-stopped
+
+  # PostgreSQL (로컬 개발용)
+  postgres:
+    image: postgres:16-alpine
+    container_name: couple-diary-local-postgres
+    environment:
+      POSTGRES_DB: couple_diary
+      POSTGRES_USER: couple_diary
+      POSTGRES_PASSWORD: couple_diary1234
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_local_data:/var/lib/postgresql/data
+    networks:
+      - couple-diary-local
+    restart: unless-stopped
+
+volumes:
+  postgres_local_data:
+  minio_local_data:
+
+networks:
+  couple-diary-local:
+    driver: bridge

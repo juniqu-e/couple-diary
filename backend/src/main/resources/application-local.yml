@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/couple_diary
+    username: couple_diary
+    password: couple_diary1234
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+
+# Storage (로컬 개발용 - MinIO)
+storage:
+  endpoint: http://minio:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: couple-diary-media
+  region: us-east-1
