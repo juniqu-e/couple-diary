@@ -1,0 +1,1 @@
+- [Project Architecture](project_architecture.md) — couple-diary = 본인 EKS 환경, dijkstra = 본인 홈서버 K8s 환경. Phase 0 합의 내용
